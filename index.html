@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+
+    <style>
+body {
+    background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
+    min-height: 100vh;
+    font-family: 'Nunito Sans', Arial, sans-serif;
+}
+.login-box {
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    padding: 40px 30px 30px 30px;
+    margin: 80px auto 0 auto;
+    max-width: 400px;
+    border: 2px solid #f7cac9;
+    position: relative;
+    animation: fadeInDown 1s;
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-40px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+h2.text-center {
+    font-family: 'Pacifico', cursive;
+    color: #ff6f61;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-shadow: 1px 2px 8px #fff6;
+}
+.form-control {
+    border-radius: 8px;
+    border: 1.5px solid #43c6ac;
+    font-size: 16px;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    background: #f8fffa;
+}
+.btn-primary {
+    background: linear-gradient(90deg, #43c6ac 0%, #f8ffae 100%);
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 2px 8px #43c6ac44;
+    transition: background 0.3s, color 0.3s;
+}
+.btn-primary:hover {
+    background: linear-gradient(90deg, #f8ffae 0%, #43c6ac 100%);
+    color: #ff6f61;
+}
+#loginError {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+}
+.birthday-icon {
+    width: 60px;
+    display: block;
+    margin: 0 auto 18px auto;
+    filter: drop-shadow(0 2px 8px #ff6f6144);
+}
+</style>
+</head>
+<body>
+    <div class="login-box">
+        <div style="text-align:center;">
+            <!-- Avatar SVG: mặt cười bình thường -->
+            <span id="avatar" style="display:inline-block;width:80px;height:80px;">
+                <!-- Avatar bình thường -->
+                <svg id="avatarNormal" width="80" height="80" viewBox="0 0 80 80">
+                    <circle cx="40" cy="40" r="38" fill="#ffe0b2" stroke="#ffb74d" stroke-width="4"/>
+                    <ellipse cx="28" cy="38" rx="6" ry="8" fill="#fff"/>
+                    <ellipse cx="52" cy="38" rx="6" ry="8" fill="#fff"/>
+                    <ellipse cx="28" cy="38" rx="2" ry="3" fill="#333"/>
+                    <ellipse cx="52" cy="38" rx="2" ry="3" fill="#333"/>
+                    <path d="M30 55 Q40 65 50 55" stroke="#e57373" stroke-width="3" fill="none" />
+                </svg>
+                <!-- Avatar che mắt (ẩn mặc định) -->
+                <svg id="avatarHide" width="80" height="80" viewBox="0 0 80 80" style="display:none;">
+                    <circle cx="40" cy="40" r="38" fill="#ffe0b2" stroke="#ffb74d" stroke-width="4"/>
+                    <!-- Tay che mắt -->
+                    <rect x="15" y="32" width="50" height="12" rx="6" fill="#ffb74d" />
+                    <ellipse cx="28" cy="38" rx="6" ry="8" fill="#fff" opacity="0.3"/>
+                    <ellipse cx="52" cy="38" rx="6" ry="8" fill="#fff" opacity="0.3"/>
+                    <path d="M30 55 Q40 65 50 55" stroke="#e57373" stroke-width="3" fill="none" />
+                </svg>
+            </span>
+        </div>
+        <h2 class="text-center">Đăng nhập</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <div style="position:relative;">
+                    <input type="password" class="form-control" id="password" required style="padding-right:40px;">
+                    <span id="togglePassword" style="position:absolute;top:8px;right:12px;cursor:pointer;font-size:20px;color:#43c6ac;">
+                        👁️
+                    </span>
+                </div>
+            </div>
+            <div id="loginError" class="text-danger" style="display:none;">Sai tên đăng nhập hoặc mật khẩu!</div>
+            <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+        </form>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/pas.js"></script>
+    <script>
+        // Link hình avatar
+        const avatarNormal = document.getElementById('avatarNormal');
+        const avatarHide = document.getElementById('avatarHide');
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        let isPasswordVisible = false;
+
+        // Khi focus vào ô mật khẩu, đổi avatar che mắt
+        passwordInput.addEventListener('focus', function() {
+            if (!isPasswordVisible) {
+                avatarNormal.style.display = 'none';
+                avatarHide.style.display = '';
+            }
+        });
+        // Khi blur khỏi ô mật khẩu, về avatar bình thường
+        passwordInput.addEventListener('blur', function() {
+            avatarNormal.style.display = '';
+            avatarHide.style.display = 'none';
+        });
+        // Khi focus vào ô username, avatar bình thường
+        document.getElementById('username').addEventListener('focus', function() {
+            avatarNormal.style.display = '';
+            avatarHide.style.display = 'none';
+        });
+
+        // Ẩn/hiện mật khẩu
+        togglePassword.addEventListener('click', function() {
+            isPasswordVisible = !isPasswordVisible;
+            if (isPasswordVisible) {
+                passwordInput.type = 'text';
+                togglePassword.textContent = '🙈'; // Mở mắt
+            } else {
+                passwordInput.type = 'password';
+                togglePassword.textContent = '👁️'; // Che mắt
+            }
+        });
+
+        // Khi focus vào ô mật khẩu, nếu đang ẩn thì che mắt, nếu hiện thì mở mắt
+        passwordInput.addEventListener('focus', function() {
+            if (isPasswordVisible) {
+                togglePassword.textContent = '🙈';
+            } else {
+                togglePassword.textContent = '👁️';
+            }
+        });
+        // Khi blur khỏi ô mật khẩu, giữ nguyên trạng thái icon
+    </script>
+</body>
+</html>
